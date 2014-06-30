@@ -125,6 +125,25 @@ namespace D4S.SharePoint.Core.SPExtensions
                 return 0;
         }
 
+        public static SPFieldLookupValue GetLookup(this SPListItem item, string internalName)
+        {
+            var value = new SPFieldLookupValue();
+            var field = item.Fields.GetFieldByInternalName(internalName) as SPFieldLookup;
+            if (field != null && item[field.Id] != null)
+            {
+                var objField = item[field.Id];
+                if (objField != null)
+                {
+                    var fieldValue = field.GetFieldValue(objField.ToString()) as SPFieldLookupValue;
+                    if (fieldValue != null)
+                    {
+                        value = fieldValue;
+                    }
+                }
+            }
+            return value;
+        }
+
         public static string GetLookupValue(this SPListItem item, string internalName)
         {
             string value = string.Empty;

@@ -24,7 +24,7 @@ namespace D4S.SharePoint.Core.SPExtensions
         }
 
         /// <summary>
-        /// Get the field display name
+        /// Get the field display namee
         /// </summary>
         /// <param name="list"></param>
         /// <param name="internalName">internal field name</param>
