@@ -6,10 +6,10 @@ using Microsoft.SharePoint;
 
 namespace D4S.SharePoint.Core.SPExtensions
 {
-    public static class SPWebExtensions
-    {
-        public delegate void CodeToRunElevated(SPWeb elevatedWeb);
+    public delegate void CodeToRunElevated(SPWeb elevatedWeb);
 
+    public static class SPWebExtensions
+    {        
         public static void RunElevated(this SPWeb web, CodeToRunElevated secureCode)
         {
             string webUrl = web.Url;
