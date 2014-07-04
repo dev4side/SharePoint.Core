@@ -295,6 +295,11 @@ namespace D4S.SharePoint.Core.SPExtensions
             item[item.Fields.GetFieldByInternalName(internalName).Id] = value;
         }
 
+        public static void SetValue(this SPListItem item, string internalName, SPFieldLookupValueCollection value)
+        {
+            item[item.Fields.GetFieldByInternalName(internalName).Id] = value;
+        }
+
         public static void SetValue(this SPListItem item, string internalName, DateTime value)
         {
             item[item.Fields.GetFieldByInternalName(internalName).Id] = value;
