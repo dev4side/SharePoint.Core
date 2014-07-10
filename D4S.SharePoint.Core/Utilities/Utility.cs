@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using D4S.SharePoint.Core.SPExtensions;
 using Microsoft.SharePoint;
 
 namespace D4S.SharePoint.Core.Utilities
 {
     public class Utility
     {
+        public delegate void CodeToRunElevated(SPWeb elevatedWeb);
+
         public static void RunElevated(string webUrl, CodeToRunElevated secureCode)
         {
             if (string.IsNullOrEmpty(webUrl))
