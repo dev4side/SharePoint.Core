@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.DirectoryServices.AccountManagement;
 using System.Linq;
 using System.Text;
 using Microsoft.SharePoint;
@@ -53,6 +54,48 @@ namespace D4S.SharePoint.Core.SPExtensions
             string resultListUrl = web.Url.EndsWith("/") ? web.Url + listUrl : string.Format("{0}/{1}", web.Url, listUrl);
 
             return web.GetList(resultListUrl);
+        }
+
+        /// <summary>
+        /// Includes AD groups
+        /// </summary>
+        public static bool IsUserInGroup(this SPWeb web, string userName, int groupId)
+        {
+            var group = web.SiteGroups.GetByID(groupId);
+            return web.IsUserInGroup(userName, group);
+        }
+
+        /// <summary>
+        /// Includes AD groups
+        /// </summary>
+        public static bool IsUserInGroup(this SPWeb web, string userName, string groupName)
+        {
+            var group = web.SiteGroups[groupName];
+            return web.IsUserInGroup(userName, group);
+        }
+
+        /// <summary>
+        /// Includes AD groups
+        /// </summary>
+        public static bool IsUserInGroup(this SPWeb web, string userName, SPGroup group)
+        {
+            var result = false;
+            if (!string.IsNullOrEmpty(userName) && group != null)
+                result = group.Users.Cast<SPUser>().Any(user => user.LoginName.Equals(userName) || IsInAdGroup(userName, user.Name));
+            return result;
+        }
+
+        private static bool IsInAdGroup(string loginName, string groupName)
+        {
+            var result = false;
+            var principalContext = new PrincipalContext(ContextType.Domain);
+            var userPrincipal = UserPrincipal.FindByIdentity(principalContext, IdentityType.SamAccountName, loginName);
+            if (userPrincipal != null)
+            {
+                var group = GroupPrincipal.FindByIdentity(principalContext, groupName);
+                result = group != null && userPrincipal.IsMemberOf(group);
+            }
+            return result;
         }
 
         /// <summary>
@@ -113,6 +156,6 @@ namespace D4S.SharePoint.Core.SPExtensions
                     }
                 }
             }
-        }
+        }        
     }
 }
