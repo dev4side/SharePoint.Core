@@ -42,5 +42,15 @@ namespace D4S.SharePoint.Core.Utilities
                 }
             });
         }
+
+        public static string DecodeUserName(string loginName)
+        {
+            string userName = loginName;
+            Microsoft.SharePoint.Administration.Claims.SPClaimProviderManager mgr = Microsoft.SharePoint.Administration.Claims.SPClaimProviderManager.Local;
+            if (mgr != null && !string.IsNullOrEmpty(loginName) && loginName.Contains("|"))
+                userName = mgr.DecodeClaim(loginName).Value;
+
+            return userName;
+        }
     }
 }

@@ -80,8 +80,9 @@ namespace D4S.SharePoint.Core.SPExtensions
         public static bool IsUserInGroup(this SPWeb web, string userName, SPGroup group)
         {
             var result = false;
+            userName = Utilities.Utility.DecodeUserName(userName);
             if (!string.IsNullOrEmpty(userName) && group != null)
-                result = group.Users.Cast<SPUser>().Any(user => user.LoginName.ToLower().Equals(userName.ToLower()) || IsInAdGroup(userName, user.Name));
+                result = group.Users.Cast<SPUser>().Any(user => Utilities.Utility.DecodeUserName(user.LoginName.ToLower()).Equals(userName.ToLower()) || IsInAdGroup(userName, user.Name));
             return result;
         }
 
@@ -100,6 +101,8 @@ namespace D4S.SharePoint.Core.SPExtensions
             }
             return result;
         }
+
+
 
         /// <summary>
         /// Check if the current user belongs to at least one of the groups
