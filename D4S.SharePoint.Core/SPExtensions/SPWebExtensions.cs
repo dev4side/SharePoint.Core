@@ -81,7 +81,7 @@ namespace D4S.SharePoint.Core.SPExtensions
         {
             var result = false;
             if (!string.IsNullOrEmpty(userName) && group != null)
-                result = group.Users.Cast<SPUser>().Any(user => user.LoginName.Equals(userName) || IsInAdGroup(userName, user.Name));
+                result = group.Users.Cast<SPUser>().Any(user => user.LoginName.ToLower().Equals(userName.ToLower()) || IsInAdGroup(userName, user.Name));
             return result;
         }
 
@@ -92,8 +92,11 @@ namespace D4S.SharePoint.Core.SPExtensions
             var userPrincipal = UserPrincipal.FindByIdentity(principalContext, IdentityType.SamAccountName, loginName);
             if (userPrincipal != null)
             {
+                //var group = GroupPrincipal.FindByIdentity(principalContext, groupName);
+                //result = group != null && userPrincipal.IsMemberOf(group);
+                var userSid = userPrincipal.Sid.ToString().ToLower();
                 var group = GroupPrincipal.FindByIdentity(principalContext, groupName);
-                result = group != null && userPrincipal.IsMemberOf(group);
+                result = group != null && group.Members.Any(member => userSid.Equals(member.Sid.ToString().ToLower()));
             }
             return result;
         }
