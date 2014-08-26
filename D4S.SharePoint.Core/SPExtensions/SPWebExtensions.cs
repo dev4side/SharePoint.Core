@@ -6,7 +6,7 @@ using System.Text;
 using Microsoft.SharePoint;
 
 namespace D4S.SharePoint.Core.SPExtensions
-{    
+{
     public static class SPWebExtensions
     {
         public delegate void CodeToRunElevated(SPWeb elevatedWeb);
@@ -116,7 +116,7 @@ namespace D4S.SharePoint.Core.SPExtensions
             try
             {
                 foreach (string group in groups)
-                {                    
+                {
                     try
                     {
                         SPGroup spGroup = web.Groups[group.Trim()];
@@ -124,7 +124,8 @@ namespace D4S.SharePoint.Core.SPExtensions
                         if (result)
                             break;
                     }
-                    catch (Exception) {
+                    catch (Exception)
+                    {
                         try
                         {
                             SPGroup spGroup = web.SiteGroups[group.Trim()];
@@ -132,7 +133,7 @@ namespace D4S.SharePoint.Core.SPExtensions
                             if (result)
                                 break;
                         }
-                        catch (Exception) {}
+                        catch (Exception) { }
                     }
                 }
             }
@@ -162,6 +163,6 @@ namespace D4S.SharePoint.Core.SPExtensions
                     }
                 }
             }
-        }        
+        }
     }
 }

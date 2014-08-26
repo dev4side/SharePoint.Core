@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.SharePoint;
 using System.Globalization;
 using System.IO;
+using Microsoft.SharePoint.Utilities;
 
 namespace D4S.SharePoint.Core.SPExtensions
 {
@@ -56,7 +57,15 @@ namespace D4S.SharePoint.Core.SPExtensions
             CopyAttachments(fromItem, toItem, true);
         }
 
-        private static void CopyAttachments(SPListItem fromItem, SPListItem toItem, bool move   )
+
+        public static IEnumerable<string> GetAttachmentUrls(this SPListItem item)
+        {
+            return from string fileName in item.Attachments
+                   orderby fileName
+                   select SPUrlUtility.CombineUrl(item.Attachments.UrlPrefix, fileName);
+        }
+
+        private static void CopyAttachments(SPListItem fromItem, SPListItem toItem, bool move)
         {
             if (fromItem.Attachments.Count > 0)
             {
@@ -68,12 +77,12 @@ namespace D4S.SharePoint.Core.SPExtensions
                 {
                     stream = file.OpenBinaryStream();
                     buffer = new byte[stream.Length];
-                    stream.Read(buffer, 0, (int) stream.Length);
+                    stream.Read(buffer, 0, (int)stream.Length);
                     stream.Close();
                     stream.Dispose();
                     toItem.Attachments.Add(file.Name, buffer);
                 }
-                
+
                 if (move)
                 {
                     int num = fromItem.Attachments.Count;
@@ -295,12 +304,12 @@ namespace D4S.SharePoint.Core.SPExtensions
             item[item.Fields.GetFieldByInternalName(internalName).Id] = value;
         }
 
-        public static void SetValue(this SPListItem item, string internalName, SPFieldLookupValueCollection value)
+        public static void SetValue(this SPListItem item, string internalName, DateTime value)
         {
             item[item.Fields.GetFieldByInternalName(internalName).Id] = value;
         }
 
-        public static void SetValue(this SPListItem item, string internalName, DateTime value)
+        public static void SetValue(this SPListItem item, string internalName, SPFieldLookupValueCollection value)
         {
             item[item.Fields.GetFieldByInternalName(internalName).Id] = value;
         }
@@ -313,7 +322,7 @@ namespace D4S.SharePoint.Core.SPExtensions
             {
                 item[item.Fields.GetFieldByInternalName(internalName).Id] = new SPFieldUserValue(spUser.ParentWeb, spUser.ID, spUser.LoginName);
             }
-        }        
+        }
 
         #endregion
 
