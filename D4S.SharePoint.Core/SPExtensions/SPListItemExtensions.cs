@@ -191,6 +191,27 @@ namespace D4S.SharePoint.Core.SPExtensions
             return value;
         }
 
+        public static Dictionary<int, string> GetLookupMultiValue(this SPListItem item, string internalName)
+        {
+            Dictionary<int, string> values = new Dictionary<int, string>();
+            var field = item.Fields.GetFieldByInternalName(internalName) as SPFieldLookup;
+            if (field != null && item[field.Id] != null)
+            {
+                var objField = item[field.Id];
+                if (objField != null)
+                {
+                    var fieldValue = field.GetFieldValue(objField.ToString()) as SPFieldLookupValueCollection;
+                    SPFieldLookupValueCollection LookUpItemCollection = new SPFieldLookupValueCollection(item[internalName].ToString());
+                    for (int i = 0; i < LookUpItemCollection.Count; i++)
+                    {
+                        SPFieldLookupValue Item = LookUpItemCollection[i];
+                        values.Add(Item.LookupId, Item.LookupValue);
+                    }
+                }
+            }
+            return values;
+        }
+
         public static DateTime GetDateTimeValue(this SPListItem item, string internalName)
         {
             DateTime date = DateTime.MinValue;
