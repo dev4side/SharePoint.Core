@@ -33,5 +33,10 @@ namespace D4S.SharePoint.Core.SPExtensions
         {
             return list.Fields.GetFieldByInternalName(internalName).Title;
         }
+
+        public static IEnumerable<t> DistinctBy<t>(this IEnumerable<t> list, Func<t, object> propertySelector)
+        {
+            return list.GroupBy(propertySelector).Select(x => x.First());
+        }
     }
 }
