@@ -164,5 +164,41 @@ namespace D4S.SharePoint.Core.SPExtensions
                 }
             }
         }
+
+        /// <summary>
+        /// Check if the group exists in the site
+        /// </summary>
+        /// <param name="web"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static bool GroupExistsInWebSite(this SPWeb web, string name)
+        {
+            return web.Groups.OfType<SPGroup>().Count(g => g.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)) > 0;
+        }
+        /// <summary>
+        /// Check if the group exists in the site collection
+        /// </summary>
+        /// <param name="web"></param>
+        /// <param name="name"></param>
+        /// <param name="grp"></param>
+        /// <returns></returns>
+        public static bool GroupExistsInSiteCollection(this SPWeb web, string name, out SPGroup grp)
+        {
+            return web.SiteGroups.GroupExists(name, out grp);
+        }
+        /// <summary>
+        /// /// Check if the group exists in the site
+        /// </summary>
+        /// <param name="web"></param>
+        /// <param name="name"></param>
+        /// <param name="grp"></param>
+        /// <returns></returns>
+        public static bool GroupExistsInWebSite(this SPWeb web, string name, out SPGroup grp)
+        {
+            return web.Groups.GroupExists(name, out grp);
+        }
+
+
+
     }
 }
