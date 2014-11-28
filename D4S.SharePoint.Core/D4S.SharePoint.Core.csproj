@@ -55,6 +55,7 @@
     <Compile Include="Configuration\ConfigurationManager.cs" />
     <Compile Include="Logs\LoggingService.cs" />
     <Compile Include="Models\AdUser.cs" />
+    <Compile Include="SPExtensions\SPGroupCollectionExtensions.cs" />
     <Compile Include="SPExtensions\SPListExtensions.cs" />
     <Compile Include="SPExtensions\SPListItemExtensions.cs" />
     <Compile Include="SPExtensions\SPUserExtensions.cs" />

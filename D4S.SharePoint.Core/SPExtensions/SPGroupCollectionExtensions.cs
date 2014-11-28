@@ -20,5 +20,17 @@ namespace D4S.SharePoint.Core.SPExtensions
             grp = groups.OfType<SPGroup>().FirstOrDefault(g => g.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
             return grp != null;
         }
+
+        /// <summary>
+        /// Check if the group exist
+        /// </summary>
+        /// <param name="groups"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static bool GroupExists(this SPGroupCollection groups, string name)
+        {
+            var grp = groups.OfType<SPGroup>().FirstOrDefault(g => g.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+            return grp != null;
+        }
     }
 }
