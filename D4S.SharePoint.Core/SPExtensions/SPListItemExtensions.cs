@@ -38,6 +38,44 @@ namespace D4S.SharePoint.Core.SPExtensions
         }
 
         /// <summary>
+        /// Returns item attachments as a list of SPFile
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public static List<SPFile> GetAttachments(this SPListItem item)
+        {
+            return (from string fileName in item.Attachments select item.Web.GetFile(item.Attachments.UrlPrefix + fileName)).ToList();
+        }
+
+        /// <summary>
+        /// Add the list of SPFile as attachments on the list item
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="attachments"></param>
+        public static void AddAttachments(this SPListItem item, List<SPFile> attachments)
+        {
+            foreach (var attachment in attachments)
+            {
+                item.Attachments.Add(attachment.Name, attachment.OpenBinary());
+                item.Update();
+            }
+        }
+
+        /// <summary>
+        /// Delete a list of attachments
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="fileNames"></param>
+        public static void DeleteAttachments(this SPListItem item, string[] fileNames)
+        {
+            foreach (var fileName in fileNames)
+            {
+                item.Attachments.Delete(fileName);    
+            }
+            item.Update();
+        }
+
+        /// <summary>
         /// Copy the attachments of the current item on another item
         /// </summary>
         /// <param name="fromItem"></param>
