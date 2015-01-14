@@ -44,7 +44,9 @@ namespace D4S.SharePoint.Core.SPExtensions
         /// <returns></returns>
         public static List<SPFile> GetAttachments(this SPListItem item)
         {
-            return (from string fileName in item.Attachments select item.Web.GetFile(item.Attachments.UrlPrefix + fileName)).ToList();
+            return item == null 
+                ? null 
+                : (from string fileName in item.Attachments select item.Web.GetFile(item.Attachments.UrlPrefix + fileName)).ToList();
         }
 
         /// <summary>
@@ -54,6 +56,7 @@ namespace D4S.SharePoint.Core.SPExtensions
         /// <param name="attachments"></param>
         public static void AddAttachments(this SPListItem item, List<SPFile> attachments)
         {
+            if (item == null) return;
             foreach (var attachment in attachments)
             {
                 item.Attachments.Add(attachment.Name, attachment.OpenBinary());
@@ -68,6 +71,7 @@ namespace D4S.SharePoint.Core.SPExtensions
         /// <param name="fileNames"></param>
         public static void DeleteAttachments(this SPListItem item, string[] fileNames)
         {
+            if (item == null) return;
             foreach (var fileName in fileNames)
             {
                 item.Attachments.Delete(fileName);    
@@ -82,6 +86,8 @@ namespace D4S.SharePoint.Core.SPExtensions
         /// <param name="toItem">Destination item</param>
         public static void CopyAttachmentsTo(this SPListItem fromItem, SPListItem toItem)
         {
+            if (fromItem == null || toItem == null)
+                return;
             CopyAttachments(fromItem, toItem, false);
         }
 
@@ -92,12 +98,16 @@ namespace D4S.SharePoint.Core.SPExtensions
         /// <param name="toItem">Destination item</param>
         public static void MoveAttachmentsTo(this SPListItem fromItem, SPListItem toItem)
         {
+            if (fromItem == null || toItem == null)
+                return;
             CopyAttachments(fromItem, toItem, true);
         }
 
 
         public static IEnumerable<string> GetAttachmentUrls(this SPListItem item)
         {
+            if (item == null)
+                return null;
             return from string fileName in item.Attachments
                    orderby fileName
                    select SPUrlUtility.CombineUrl(item.Attachments.UrlPrefix, fileName);
@@ -105,6 +115,8 @@ namespace D4S.SharePoint.Core.SPExtensions
 
         private static void CopyAttachments(SPListItem fromItem, SPListItem toItem, bool move)
         {
+            if (fromItem == null || toItem == null)
+                return;
             if (fromItem.Attachments.Count > 0)
             {
                 var folder =
